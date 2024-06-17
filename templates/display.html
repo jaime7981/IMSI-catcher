@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cellular Frequency Display</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Cellular Frequency Data</h1>
+    <canvas id="waveformChart" width="800" height="400"></canvas>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.js"></script>
+    <script>
+        var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+        var ctx = document.getElementById('waveformChart').getContext('2d');
+        var MAX_DATA_POINTS = 100;  // Limit the number of data points displayed
+        var chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Frequency Data',
+                    borderColor: 'rgb(75, 192, 192)',
+                    data: []
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        type: 'linear',
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+
+        var lastUpdateTime = Date.now();
+        var UPDATE_INTERVAL = 100;  // Update interval in milliseconds
+
+        socket.on('new_data', function(data) {
+            var currentTime = Date.now();
+            if (currentTime - lastUpdateTime >= UPDATE_INTERVAL) {
+                // Limit the number of data points
+                if (data.length > MAX_DATA_POINTS) {
+                    data = data.slice(data.length - MAX_DATA_POINTS);
+                }
+
+                // Update chart with new data
+                chart.data.labels = Array.from({ length: data.length }, (v, i) => i);
+                chart.data.datasets[0].data = data;
+                chart.update();
+
+                lastUpdateTime = currentTime;
+            }
+        });
+    </script>
+</body>
+</html>
