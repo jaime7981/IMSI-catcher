@@ -42,7 +42,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [976, 12.0]
+    coordinate: [1000, 12.0]
     rotation: 0
     state: enabled
 - name: BCCH
@@ -54,7 +54,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [760, 12.0]
+    coordinate: [784, 12.0]
     rotation: 0
     state: enabled
 - name: CCCH
@@ -66,7 +66,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [832, 12.0]
+    coordinate: [856, 12.0]
     rotation: 0
     state: enabled
 - name: CHANNEL_UNKNOWN
@@ -90,7 +90,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1048, 12.0]
+    coordinate: [1080, 12.0]
     rotation: 0
     state: enabled
 - name: RACH
@@ -102,7 +102,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [904, 12.0]
+    coordinate: [928, 12.0]
     rotation: 0
     state: enabled
 - name: SDCCH
@@ -114,7 +114,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1120, 12.0]
+    coordinate: [1152, 12.0]
     rotation: 0
     state: enabled
 - name: fc
@@ -168,7 +168,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [720, 76.0]
+    coordinate: [1080, 100.0]
     rotation: 0
     state: enabled
 - name: ppm
@@ -201,7 +201,66 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [8, 100.0]
+    coordinate: [8, 116.0]
+    rotation: 0
+    state: enabled
+- name: analog_sig_source_x_0
+  id: analog_sig_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    amp: '100'
+    comment: ''
+    freq: '939000000'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    offset: '200'
+    phase: '0'
+    samp_rate: samp_rate
+    showports: 'True'
+    type: complex
+    waveform: analog.GR_COS_WAVE
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [0, 448.0]
+    rotation: 0
+    state: enabled
+- name: blocks_message_debug_0
+  id: blocks_message_debug
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    en_uvec: 'True'
+    log_level: info
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1600, 12.0]
+    rotation: 0
+    state: enabled
+- name: blocks_throttle2_0
+  id: blocks_throttle2
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_second: samp_rate
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [232, 540.0]
     rotation: 0
     state: enabled
 - name: gsm_clock_offset_control_0
@@ -219,7 +278,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [416, 428.0]
+    coordinate: [680, 384.0]
     rotation: 0
     state: enabled
 - name: gsm_control_channels_decoder_0
@@ -270,7 +329,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1536, 220.0]
+    coordinate: [1568, 168.0]
     rotation: 0
     state: enabled
 - name: gsm_receiver_0
@@ -324,16 +383,34 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
     mtu: '10000'
-    port: '4729'
+    port: '5555'
     tcp_no_delay: 'False'
     type: TCP_SERVER
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1560, 332.0]
+    coordinate: [1600, 324.0]
     rotation: 0
-    state: enabled
+    state: disabled
+- name: pdu_pdu_to_stream_x_0
+  id: pdu_pdu_to_stream_x
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    depth: '64'
+    early_behavior: pdu.EARLY_BURST_DROP
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: complex
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1600, 468.0]
+    rotation: 0
+    state: disabled
 - name: ppm_param
   id: parameter
   parameters:
@@ -348,7 +425,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [616, 76.0]
+    coordinate: [1248, 12.0]
     rotation: 0
     state: enabled
 - name: qtgui_freq_sink_x_0
@@ -429,7 +506,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [328, 556.0]
+    coordinate: [576, 528.0]
     rotation: 0
     state: enabled
 - name: uhd_usrp_source_0
@@ -865,18 +942,61 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [24, 228.0]
+    coordinate: [0, 224.0]
+    rotation: 0
+    state: disabled
+- name: zeromq_push_msg_sink_0
+  id: zeromq_push_msg_sink
+  parameters:
+    address: '"tcp://127.0.0.1:5555"'
+    affinity: ''
+    alias: ''
+    bind: 'True'
+    comment: ''
+    timeout: '100'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1552, 572.0]
     rotation: 0
     state: enabled
+- name: zeromq_push_sink_0
+  id: zeromq_push_sink
+  parameters:
+    address: '"tcp://127.0.0.1:5555"'
+    affinity: ''
+    alias: ''
+    bind: 'True'
+    comment: ''
+    hwm: '-1'
+    pass_tags: 'False'
+    timeout: '100'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1840, 436.0]
+    rotation: 0
+    state: disabled
 
 connections:
+- [analog_sig_source_x_0, '0', blocks_throttle2_0, '0']
+- [blocks_throttle2_0, '0', gsm_input_0, '0']
+- [blocks_throttle2_0, '0', qtgui_freq_sink_x_0, '0']
 - [gsm_clock_offset_control_0, ctrl, gsm_input_0, ctrl_in]
+- [gsm_control_channels_decoder_0, msgs, blocks_message_debug_0, log]
 - [gsm_control_channels_decoder_0, msgs, gsm_message_printer_0, msgs]
 - [gsm_control_channels_decoder_0, msgs, network_socket_pdu_0, pdus]
+- [gsm_control_channels_decoder_0, msgs, pdu_pdu_to_stream_x_0, pdus]
+- [gsm_control_channels_decoder_0, msgs, zeromq_push_msg_sink_0, in]
 - [gsm_input_0, '0', gsm_receiver_0, '0']
 - [gsm_receiver_0, C0, gsm_universal_ctrl_chans_demapper_0, bursts]
 - [gsm_receiver_0, measurements, gsm_clock_offset_control_0, measurements]
 - [gsm_universal_ctrl_chans_demapper_0, bursts, gsm_control_channels_decoder_0, bursts]
+- [pdu_pdu_to_stream_x_0, '0', zeromq_push_sink_0, '0']
 - [uhd_usrp_source_0, '0', gsm_input_0, '0']
 - [uhd_usrp_source_0, '0', qtgui_freq_sink_x_0, '0']
 
