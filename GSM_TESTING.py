@@ -25,7 +25,7 @@ from gnuradio.eng_arg import eng_float, intx
 from gnuradio import eng_notation
 from gnuradio import gsm
 import pmt
-from gnuradio import zeromq
+from gnuradio import network
 import sip
 
 
@@ -93,7 +93,6 @@ class GSM_TESTING(gr.top_block, Qt.QWidget):
         self._fc_range = qtgui.Range(925e6, 960e6, 200e3, 939e6, 200)
         self._fc_win = qtgui.RangeWidget(self._fc_range, self.set_fc, "center_frequency", "counter_slider", float, QtCore.Qt.Horizontal)
         self.top_layout.addWidget(self._fc_win)
-        self.zeromq_push_msg_sink_0 = zeromq.push_msg_sink("tcp://127.0.0.1:5555", 100, True)
         self.qtgui_freq_sink_x_0 = qtgui.freq_sink_c(
             1024, #size
             window.WIN_BLACKMAN_hARRIS, #wintype
@@ -136,6 +135,7 @@ class GSM_TESTING(gr.top_block, Qt.QWidget):
 
         self._qtgui_freq_sink_x_0_win = sip.wrapinstance(self.qtgui_freq_sink_x_0.qwidget(), Qt.QWidget)
         self.top_layout.addWidget(self._qtgui_freq_sink_x_0_win)
+        self.network_socket_pdu_0 = network.socket_pdu('TCP_SERVER', '127.0.0.1', '5555', 10000, False)
         self.gsm_universal_ctrl_chans_demapper_0 = gsm.universal_ctrl_chans_demapper(0, [0,0,2,2,2,2,6,6,6,6,0,0,12,12,12,12,16,16,16,16,0,0,22,22,22,22,26,26,26,26,0,0,32,32,32,32,36,36,36,36,0,0,42,42,42,42,46,46,46,46,0,], [0,0,1,1,1,1,2,2,2,2,0,0,2,2,2,2,2,2,2,2,0,0,2,2,2,2,2,2,2,2,0,0,2,2,2,2,2,2,2,2,0,0,2,2,2,2,2,2,2,2,0,], [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,], [0,0,0,0,0,0,6,6,6,6,10,10,10,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,37,37,37,37,41,41,41,41,0,0,47,47,47,47], [2,2,2,2,0,0,2,2,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2,2,2,2,2,0,0,2,2,2,2,], [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,])
         self.gsm_receiver_0 = gsm.receiver(4, [0], [], False)
         self.gsm_message_printer_0 = gsm.message_printer(pmt.intern(''), False,
@@ -162,10 +162,11 @@ class GSM_TESTING(gr.top_block, Qt.QWidget):
         self.msg_connect((self.gsm_clock_offset_control_0, 'ctrl'), (self.gsm_input_0, 'ctrl_in'))
         self.msg_connect((self.gsm_control_channels_decoder_0, 'msgs'), (self.blocks_message_debug_0, 'log'))
         self.msg_connect((self.gsm_control_channels_decoder_0, 'msgs'), (self.gsm_message_printer_0, 'msgs'))
-        self.msg_connect((self.gsm_control_channels_decoder_0, 'msgs'), (self.zeromq_push_msg_sink_0, 'in'))
+        self.msg_connect((self.gsm_control_channels_decoder_0, 'msgs'), (self.network_socket_pdu_0, 'pdus'))
         self.msg_connect((self.gsm_receiver_0, 'measurements'), (self.gsm_clock_offset_control_0, 'measurements'))
         self.msg_connect((self.gsm_receiver_0, 'C0'), (self.gsm_universal_ctrl_chans_demapper_0, 'bursts'))
         self.msg_connect((self.gsm_universal_ctrl_chans_demapper_0, 'bursts'), (self.gsm_control_channels_decoder_0, 'bursts'))
+        self.msg_connect((self.network_socket_pdu_0, 'pdus'), (self.blocks_message_debug_0, 'log'))
         self.connect((self.analog_sig_source_x_0, 0), (self.blocks_throttle2_0, 0))
         self.connect((self.blocks_throttle2_0, 0), (self.gsm_input_0, 0))
         self.connect((self.blocks_throttle2_0, 0), (self.qtgui_freq_sink_x_0, 0))

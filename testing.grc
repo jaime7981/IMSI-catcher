@@ -239,7 +239,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1600, 12.0]
+    coordinate: [1944, 36.0]
     rotation: 0
     state: enabled
 - name: blocks_throttle2_0
@@ -329,7 +329,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1568, 168.0]
+    coordinate: [1576, 40.0]
     rotation: 0
     state: enabled
 - name: gsm_receiver_0
@@ -390,9 +390,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1600, 324.0]
+    coordinate: [1592, 308.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: pdu_pdu_to_stream_x_0
   id: pdu_pdu_to_stream_x
   parameters:
@@ -408,7 +408,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1600, 468.0]
+    coordinate: [1648, 540.0]
     rotation: 0
     state: disabled
 - name: ppm_param
@@ -958,9 +958,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1552, 572.0]
+    coordinate: [1552, 636.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: zeromq_push_sink_0
   id: zeromq_push_sink
   parameters:
@@ -978,7 +978,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1840, 436.0]
+    coordinate: [1912, 324.0]
     rotation: 0
     state: disabled
 
@@ -996,6 +996,7 @@ connections:
 - [gsm_receiver_0, C0, gsm_universal_ctrl_chans_demapper_0, bursts]
 - [gsm_receiver_0, measurements, gsm_clock_offset_control_0, measurements]
 - [gsm_universal_ctrl_chans_demapper_0, bursts, gsm_control_channels_decoder_0, bursts]
+- [network_socket_pdu_0, pdus, blocks_message_debug_0, log]
 - [pdu_pdu_to_stream_x_0, '0', zeromq_push_sink_0, '0']
 - [uhd_usrp_source_0, '0', gsm_input_0, '0']
 - [uhd_usrp_source_0, '0', qtgui_freq_sink_x_0, '0']
