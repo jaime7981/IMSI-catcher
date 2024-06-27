@@ -10,6 +10,9 @@ PUBLISH_INTERVAL = 0.1  # 100ms
 app = Flask(__name__)
 socketio = SocketIO(app)
 
+def list_to_string(lst):
+    return ''.join(chr(i) for i in lst)
+
 def zmq_listener():
     # ZeroMQ context and subscriber socket
     context = zmq.Context()
@@ -28,8 +31,8 @@ def zmq_listener():
             # Rate limit the publishing
             current_time = time.time()
             if current_time - last_emit_time >= PUBLISH_INTERVAL:
-                print(data_ints)
-                socketio.emit('new_data', {'message': str(data_ints)})
+                string = list_to_string(data_ints)
+                socketio.emit('new_data', {'message': str(string)})
                 last_emit_time = current_time
 
         except zmq.Again:
