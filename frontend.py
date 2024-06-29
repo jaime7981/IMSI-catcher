@@ -1,22 +1,25 @@
 from flask import Flask, render_template
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO
 import zmq
 import threading
 import time
 
-app = Flask(__name__)
-socketio = SocketIO(app)
-
-# ZeroMQ context and subscriber socket
-context = zmq.Context()
-socket = context.socket(zmq.SUB)
-socket.connect("tcp://localhost:5555")
-socket.setsockopt_string(zmq.SUBSCRIBE, "")
-
 # Rate limiting parameters
 PUBLISH_INTERVAL = 0.1  # 100ms
 
+app = Flask(__name__)
+socketio = SocketIO(app)
+
+def list_to_string(lst):
+    return ''.join(chr(i) for i in lst)
+
 def zmq_listener():
+    # ZeroMQ context and subscriber socket
+    context = zmq.Context()
+    socket = context.socket(zmq.SUB)
+    socket.connect("tcp://localhost:5555")
+    socket.setsockopt_string(zmq.SUBSCRIBE, "")
+
     last_emit_time = time.time()
     while True:
         try:
@@ -28,8 +31,8 @@ def zmq_listener():
             # Rate limit the publishing
             current_time = time.time()
             if current_time - last_emit_time >= PUBLISH_INTERVAL:
-                print("Sending data")
-                socketio.emit('new_data', data_ints)
+                string = list_to_string(data_ints)
+                socketio.emit('new_data', {'message': str(string)})
                 last_emit_time = current_time
 
         except zmq.Again:
@@ -42,5 +45,10 @@ threading.Thread(target=zmq_listener, daemon=True).start()
 def display():
     return render_template('display.html')
 
+@app.route('/')
+def index():
+    return render_template('index.html')
+
 if __name__ == '__main__':
+    client_thread = threading.Thread(target=zmq_listener, daemon=True).start()
     socketio.run(app, host='0.0.0.0', port=5001, debug=True)
